@@ -5,6 +5,21 @@ Customer churn prediction project with a clean, modular pipeline for:
 - Model training and evaluation
 - Batch inference
 
+## Environment Setup (Conda)
+
+This project uses Conda via `environment.yml`.
+
+```bash
+make create-env
+conda activate churn-ml
+```
+
+If the environment already exists and you changed dependencies:
+
+```bash
+make update-env
+```
+
 ## Packages
 
 Main runtime packages:
@@ -19,10 +34,33 @@ Development/style packages:
 - pylint
 - mypy
 
-Install all dependencies:
+## Quality Checks
+
+Run checks with Makefile:
 
 ```bash
-pip install -r requirements.txt
+make lint
+make type-check
+```
+
+Or run everything together:
+
+```bash
+make check
+```
+
+Formatting:
+
+```bash
+make format
+```
+
+## Useful Commands
+
+```bash
+make help
+make run
+make clean
 ```
 
 ## Google Python Style
@@ -33,26 +71,17 @@ This repository is configured to follow Google-style Python conventions:
 - Static typing checks with MyPy
 - Consistent formatting with Black
 
-Run checks:
-
-```bash
-ruff check .
-black --check .
-pylint src
-mypy src
-```
-
 ## Project Structure
 
 ```text
 src/
 	data/
-		load_data.py
+		data_loader.py
 	models/
-		train.py
-		evaluate.py
-		predict.py
+		model_trainer.py
+		model_evaluator.py
+		model_predictor.py
 	pipeline/
-		train_pipeline.py
-		inference_pipeline.py
+		training_runner.py
+		inference_runner.py
 ```
