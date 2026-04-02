@@ -1,15 +1,19 @@
 """Data ingestion utilities for reading raw data and creating train/test splits."""
 
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from src.utils.exception_handler import CustomError
-from src.utils.logging_handler import LOGGER
-
 _PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
+from src.utils.exception_handler import CustomError  # noqa: E402
+from src.utils.logging_handler import LOGGER  # noqa: E402
+
 _DATA_DIR = _PROJECT_ROOT / "data"
 
 
@@ -72,3 +76,19 @@ class DataIngestor:
         except Exception as error:
             LOGGER.exception("Data ingestion failed")
             raise CustomError(error) from error
+
+
+if __name__ == "__main__":
+    ingestor = DataIngestor()
+    source_path = ingestor.data_config.raw_data_path
+
+    if not source_path.exists():
+        raise FileNotFoundError(
+            f"Input file not found at {source_path}. "
+            "Place your CSV there before running this smoke test."
+        )
+
+    train_path, test_path = ingestor.init_data_file()
+    print("Data ingestion smoke test passed.")
+    print(f"Train file: {train_path}")
+    print(f"Test file: {test_path}")
